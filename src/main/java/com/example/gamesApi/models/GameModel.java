@@ -1,10 +1,14 @@
 package com.example.gamesApi.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Entity
 @Table(name = "games")
@@ -14,15 +18,20 @@ public class GameModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+
     private String title;
+
 
     private String gender;
 
     private String[] platforms;
 
+
     private BigDecimal price;
 
+
     private int ageGroup;
+
 
 
     public UUID getId() {
@@ -54,7 +63,28 @@ public class GameModel implements Serializable {
     }
 
     public void setPlatforms(String[] platforms) {
-        this.platforms = platforms;
+        boolean validation = true;
+
+        for(int i=0; i <= platforms.length-1; i++){
+            if(platforms[i].equalsIgnoreCase("PS5")
+                    || platforms[i].equalsIgnoreCase("PS4")
+                    || platforms[i].equalsIgnoreCase("Xbox 360")
+                    || platforms[i].equalsIgnoreCase("Xbox One")
+                    || platforms[i].equalsIgnoreCase("PC")
+                    || platforms[i].equalsIgnoreCase("Nintendo Switch")
+                    || platforms[i].equalsIgnoreCase("Android")
+                    || platforms[i].equalsIgnoreCase("iOS")){
+
+            } else {
+                validation = false;
+            }
+        }
+
+        if(validation){
+            this.platforms = platforms;
+        } else {
+            this.platforms = null;
+        }
     }
 
     public BigDecimal getPrice() {

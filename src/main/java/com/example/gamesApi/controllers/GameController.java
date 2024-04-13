@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,9 +34,16 @@ public class GameController {
     }
 
     @PostMapping("/games")
-    public ResponseEntity<GameModel> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
+    public ResponseEntity<Object> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
         var gameModel = new GameModel();
         BeanUtils.copyProperties(gameRecordDto, gameModel);
+
+        if(gameModel.getPlatforms() == null){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Enter a valid platform: PS5, PS4, Xbox 360, Xbox One, PC, Nintendo Switch, Android, iOS.");
+        }
+        if(gameModel.getTitle().isEmpty()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Enter a valid name.");
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(gameRepository.save(gameModel));
     }
 
