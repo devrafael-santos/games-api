@@ -7,6 +7,5 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record GameRecordDto(@NotBlank String title, @NotBlank String gender, @NotNull String[] platforms, @NotNull
-                            BigDecimal price, @NotNull int ageGroup) {
+public record GameRecordDto(String title, String gender, String[] platforms, BigDecimal price, int ageGroup) {
 }

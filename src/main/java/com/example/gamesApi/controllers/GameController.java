@@ -1,8 +1,9 @@
 package com.example.gamesApi.controllers;
 
 import com.example.gamesApi.dto.GameRecordDto;
-import com.example.gamesApi.models.GameModel;
+import com.example.gamesApi.entities.Game;
 import com.example.gamesApi.repositories.GameRepository;
+import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,17 @@ public class GameController {
     @Autowired
     GameRepository gameRepository;
 
+    @Autowired
+    GameService gameService;
+
     @GetMapping("/games")
-    public ResponseEntity<List<GameModel>> getGames() {
+    public ResponseEntity<List<Game>> getGames() {
         return ResponseEntity.status(HttpStatus.OK).body(gameRepository.findAll());
     }
 
     @GetMapping("/games/{id}")
     public ResponseEntity<Object> getGame(@PathVariable(value = "id") UUID id){
-        Optional<GameModel> gameO = gameRepository.findById(id);
+        Optional<Game> gameO = gameRepository.findById(id);
         if(gameO.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not found");
         }
@@ -35,16 +39,12 @@ public class GameController {
 
     @PostMapping("/games")
     public ResponseEntity<Object> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
-        var gameModel = new GameModel();
-        BeanUtils.copyProperties(gameRecordDto, gameModel);
+        var responseGameService = gameService.createGame(gameRecordDto);
 
-        if(gameModel.getPlatforms() == null){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Enter a valid platform: PS5, PS4, Xbox 360, Xbox One, PC, Nintendo Switch, Android, iOS.");
+        if(responseGameService.getClass() == String.class){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseGameService);
         }
-        if(gameModel.getTitle().isEmpty()){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Enter a valid name.");
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(gameRepository.save(gameModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseGameService);
     }
 
     @DeleteMapping("/games/{id}")
@@ -60,16 +60,13 @@ public class GameController {
 
     @PutMapping("/games/{id}")
     public ResponseEntity<Object> updateGame(@PathVariable(value = "id") UUID id,
-                                         @RequestBody @Valid GameRecordDto gameRecordDto){
-        Optional<GameModel> gameO = gameRepository.findById(id);
-        if(gameO.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not found");
+                                         @RequestBody GameRecordDto gameRecordDto){
+        var responseGameService = gameService.updateGame(id, gameRecordDto);
+
+        if(responseGameService.getClass() == String.class){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseGameService);
         }
 
-        var gameModel = gameO.get();
-        BeanUtils.copyProperties(gameRecordDto, gameModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(gameRepository.save(gameModel));
-
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseGameService);
     }
 }
