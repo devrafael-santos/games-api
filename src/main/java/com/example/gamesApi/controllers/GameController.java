@@ -5,7 +5,6 @@ import com.example.gamesApi.entities.Game;
 import com.example.gamesApi.repositories.GameRepository;
 import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
