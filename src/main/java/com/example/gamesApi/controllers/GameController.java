@@ -3,7 +3,9 @@ package com.example.gamesApi.controllers;
 import com.example.gamesApi.dto.GameRecordDto;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.repositories.GameRepository;
+import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,16 +22,14 @@ import java.util.UUID;
 @RestController
 public class GameController {
     @Autowired
-    GameRepository gameRepository;
-
-    final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    final Calendar calendar = Calendar.getInstance();
+    private GameService gameService;
 
     @GetMapping("/games")
     public ResponseEntity<List<GameModel>> getGames() {
-        return ResponseEntity.status(HttpStatus.OK).body(gameRepository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(gameService.getAll());
     }
 
+    /*
     @GetMapping("/games/{id}")
     public ResponseEntity<Object> getGame(@PathVariable(value = "id") UUID id){
         Optional<GameModel> gameO = gameRepository.findById(id);
@@ -38,18 +38,19 @@ public class GameController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(gameO.get());
     }
+    */
 
     @PostMapping("/games")
-    public ResponseEntity<GameModel> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
+    public ResponseEntity<Object> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
+        var response = gameService.create(gameRecordDto);
 
-        var gameModel = new GameModel();
-        BeanUtils.copyProperties(gameRecordDto, gameModel);
-
-        gameModel.setAddedTime(dateFormat.format(calendar.getTime()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(gameRepository.save(gameModel));
+        if(response.getClass() == String.class){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /*
     @DeleteMapping("/games/{id}")
     public ResponseEntity<Object> DeleteGame(@PathVariable(value = "id") UUID id){
         Optional<GameModel> gameO = gameRepository.findById(id);
@@ -77,4 +78,6 @@ public class GameController {
 
         return ResponseEntity.status(HttpStatus.OK).body(gameRepository.save(gameModel));
     }
+
+    */
 }
