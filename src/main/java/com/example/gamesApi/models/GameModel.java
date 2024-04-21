@@ -22,8 +22,6 @@ public class GameModel implements Serializable {
 
     private String[] platforms;
 
-    private BigDecimal price;
-
     private int ageGroup;
 
     private String urlImage;
@@ -35,6 +33,9 @@ public class GameModel implements Serializable {
     private String releaseDate;
 
     private String synopsis;
+
+    private String buyGame;
+
 
     public GameModel(GameRecordDto gameDto) {
         BeanUtils.copyProperties(gameDto, this);
@@ -74,14 +75,6 @@ public class GameModel implements Serializable {
 
     public void setPlatforms(String[] platforms) {this.platforms = platforms;}
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public int getAgeGroup() {
         return ageGroup;
     }
@@ -109,4 +102,8 @@ public class GameModel implements Serializable {
     public String getSynopsis() {return synopsis;}
 
     public void setSynopsis(String synopsis) {this.synopsis = synopsis;}
+
+    public String getBuyGame() {return buyGame;}
+
+    public void setBuyGame(String buyGame) {this.buyGame = buyGame;}
 }

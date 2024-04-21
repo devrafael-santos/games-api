@@ -19,8 +19,6 @@ public class GameRecordDto {
 
     private String[] platforms;
 
-    @NotNull
-    private BigDecimal price;
 
     @NotNull
     private int ageGroup;
@@ -37,9 +35,10 @@ public class GameRecordDto {
     @NotBlank
     private String synopsis;
 
-
     private String addedTime;
 
+    @NotBlank
+    private String buyGame;
 
     public GameRecordDto() {
     }
@@ -71,14 +70,6 @@ public class GameRecordDto {
 
     public void setPlatforms(String[] platforms) {
         this.platforms = platforms;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public int getAgeGroup() {
@@ -128,4 +119,8 @@ public class GameRecordDto {
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
     }
+
+    public String getBuyGame() {return buyGame;}
+
+    public void setBuyGame(String buyGame) {this.buyGame = buyGame;}
 }
