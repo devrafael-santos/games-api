@@ -3,14 +3,14 @@ package com.example.gamesApi.models;
 import com.example.gamesApi.dto.GameRecordDto;
 import jakarta.persistence.*;
 import org.springframework.beans.BeanUtils;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Table(name = "games")
-public class GameModel implements Serializable {
+public class GameModel extends RepresentationModel<GameModel> implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,51 +37,29 @@ public class GameModel implements Serializable {
     private String buyGame;
 
 
-    public GameModel(GameRecordDto gameDto) {
-        BeanUtils.copyProperties(gameDto, this);
-    }
+    public GameModel(GameRecordDto gameDto) {BeanUtils.copyProperties(gameDto, this);}
 
-    public GameModel() {
-    }
+    public GameModel() {}
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() {return id;}
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) {this.id = id;}
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() {return title;}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) {this.title = title;}
 
-    public String[] getGenres() {
-        return genres;
-    }
+    public String[] getGenres() {return genres;}
 
-    public void setGenres(String[] genres) {
+    public void setGenres(String[] genres) {this.genres = genres;}
 
-        this.genres = genres;
-    }
-
-    public String[] getPlatforms() {
-        return platforms;
-    }
+    public String[] getPlatforms() {return platforms;}
 
     public void setPlatforms(String[] platforms) {this.platforms = platforms;}
 
-    public int getAgeGroup() {
-        return ageGroup;
-    }
+    public int getAgeGroup() {return ageGroup;}
 
-    public void setAgeGroup(int ageGroup) {
-        this.ageGroup = ageGroup;
-    }
+    public void setAgeGroup(int ageGroup) {this.ageGroup = ageGroup;}
 
     public String getUrlImage() {return urlImage;}
 
