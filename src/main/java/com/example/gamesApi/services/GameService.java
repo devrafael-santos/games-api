@@ -24,9 +24,11 @@ public class GameService {
 
     public Object getOne(UUID id){
         Optional<GameModel> gameO = gameRepository.findById(id);
+
         if(gameO.isEmpty()){
             return "Game not found.";
         }
+
         return gameO.get();
     }
 
