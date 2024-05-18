@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface GameRepository extends JpaRepository<GameModel, UUID> {
+
+    boolean existsByGenres(String[] genres);
+    boolean existsByPlatforms(String[] platforms);
 }

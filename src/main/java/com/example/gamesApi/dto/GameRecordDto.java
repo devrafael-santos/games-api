@@ -1,125 +1,51 @@
 package com.example.gamesApi.dto;
 
 import com.example.gamesApi.models.GameModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
 import org.springframework.beans.BeanUtils;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
-
+@Data
 public class GameRecordDto {
     private UUID id;
-
-    @NotBlank
+    
+    @NotBlank(message = "O título do jogo deve ser preenchido.")
     private String title;
-
+    
     private String[] genres;
-
+    
     private String[] platforms;
-
 
     @NotNull
     private int ageGroup;
 
-    @NotBlank
+    @NotBlank(message = "A URL da imagem do jogo deve ser preenchida.")
     private String urlImage;
 
-    @NotBlank
+    @NotBlank(message = "A URL do banner do jogo deve ser preenchida.")
     private String urlBanner;
 
-    @NotBlank
+    @NotBlank(message = "A data de lançamento do jogo deve ser preenchida.")
     private String releaseDate;
 
-    @NotBlank
+    @NotBlank(message = "A sinopse do jogo deve ser preenchida.")
     private String synopsis;
 
-    private String addedTime;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private OffsetDateTime addedTime;
 
-    @NotBlank
+    @NotBlank(message = "O link de compra do jogo deve ser preenchido.")
     private String buyGame;
-
-    public GameRecordDto() {
-    }
 
     public GameRecordDto(GameModel game) {
         BeanUtils.copyProperties(game, this);
     }
 
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String[] getGenres() {
-        return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = genres;
-    }
-
-    public String[] getPlatforms() {
-        return platforms;
-    }
-
-    public void setPlatforms(String[] platforms) {
-        this.platforms = platforms;
-    }
-
-    public int getAgeGroup() {
-        return ageGroup;
-    }
-
-    public void setAgeGroup(int ageGroup) {
-        this.ageGroup = ageGroup;
-    }
-
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
-    }
-
-    public String getUrlBanner() {
-        return urlBanner;
-    }
-
-    public void setUrlBanner(String urlBanner) {
-        this.urlBanner = urlBanner;
-    }
-
-    public String getAddedTime() {
-        return addedTime;
-    }
-
-    public void setAddedTime(String addedTime) {
-        this.addedTime = addedTime;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
-
-    public String getBuyGame() {return buyGame;}
-
-    public void setBuyGame(String buyGame) {this.buyGame = buyGame;}
 }
