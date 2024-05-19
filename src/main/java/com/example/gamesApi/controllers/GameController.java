@@ -58,7 +58,7 @@ public class GameController {
     public ResponseEntity<?> DeleteGame(@PathVariable(value = "id") UUID id){
         try {
             gameService.deleteGame(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Jogo deletado com sucesso.");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Game deleted successfully.");
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {

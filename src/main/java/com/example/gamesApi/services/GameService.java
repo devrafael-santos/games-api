@@ -33,16 +33,14 @@ public class GameService {
     public GameRecordDto createGame(GameModel gameModel) {
         
         Boolean gameExists = gameRepository.existsByGenres(gameModel.getGenres());
-        Boolean plataformExists = gameRepository.existsByPlatforms(gameModel.getPlatforms());
 
-        if(!gameExists && !plataformExists){
+        if(!gameExists){
             GameModel game = new GameModel();
             game.setTitle(gameModel.getTitle());
             game.setGenres(gameModel.getGenres());
             game.setPlatforms(gameModel.getPlatforms());
             game.setAgeGroup(gameModel.getAgeGroup());
             game.setUrlImage(gameModel.getUrlImage());
-            game.setUrlBanner(gameModel.getUrlBanner());
             game.setReleaseDate(gameModel.getReleaseDate());
             game.setSynopsis(gameModel.getSynopsis());
             game.setAddedTime(OffsetDateTime.now());
@@ -50,27 +48,27 @@ public class GameService {
             GameModel gameSaved = gameRepository.save(game);
             return new GameRecordDto(gameSaved);
         } else {
-            throw new RuntimeException("Genres or Platforms já existentes");
+            throw new RuntimeException("Game already exist.");
         }
     }
 
     public GameRecordDto updateGame(UUID id, GameModel gameModel){
 
         if (id == null || gameModel == null) {
-            throw new IllegalArgumentException("ID ou dados do jogo não podem ser nulos.");
+            throw new IllegalArgumentException("Game ID or data cannot be null.");
         }
 
         GameModel gameExisting = gameRepository.findById(id).orElse(null);
         if (gameExisting == null) {
-            throw new ResourceNotFoundException("Jogo não encontrado com o ID fornecido.");
+            throw new ResourceNotFoundException("Game not found with the provided ID.");
         }
 
+        gameExisting.setId(gameModel.getId());
         gameExisting.setTitle(gameModel.getTitle());
         gameExisting.setGenres(gameModel.getGenres());
         gameExisting.setPlatforms(gameModel.getPlatforms());
         gameExisting.setAgeGroup(gameModel.getAgeGroup());
         gameExisting.setUrlImage(gameModel.getUrlImage());
-        gameExisting.setUrlBanner(gameModel.getUrlBanner());
         gameExisting.setReleaseDate(gameModel.getReleaseDate());
         gameExisting.setSynopsis(gameModel.getSynopsis());
         gameExisting.setAddedTime(OffsetDateTime.now());
@@ -82,11 +80,11 @@ public class GameService {
 
     public void deleteGame(UUID id){
         if(id == null){
-            throw new IllegalArgumentException("ID não pode ser nulo.");
+            throw new IllegalArgumentException("ID cannot be null.");
         }
         GameModel game = gameRepository.findById(id).orElse(null);
         if(game == null){
-            throw new ResourceNotFoundException("Jogo não encontrado com o ID fornecido.");
+            throw new ResourceNotFoundException("Game not found with the provided ID.");
         } else {
             gameRepository.deleteById(id);
         }

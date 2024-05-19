@@ -16,7 +16,7 @@ import java.util.UUID;
 public class GameRecordDto {
     private UUID id;
     
-    @NotBlank(message = "O título do jogo deve ser preenchido.")
+    @NotBlank(message = "The game title must be filled in.")
     private String title;
     
     private String[] genres;
@@ -26,22 +26,19 @@ public class GameRecordDto {
     @NotNull
     private int ageGroup;
 
-    @NotBlank(message = "A URL da imagem do jogo deve ser preenchida.")
+    @NotBlank(message = "The game image URL must be filled in.")
     private String urlImage;
 
-    @NotBlank(message = "A URL do banner do jogo deve ser preenchida.")
-    private String urlBanner;
-
-    @NotBlank(message = "A data de lançamento do jogo deve ser preenchida.")
+    @NotBlank(message = "The game's release date must be filled in.")
     private String releaseDate;
 
-    @NotBlank(message = "A sinopse do jogo deve ser preenchida.")
+    @NotBlank(message = "The game synopsis must be completed.")
     private String synopsis;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private OffsetDateTime addedTime;
 
-    @NotBlank(message = "O link de compra do jogo deve ser preenchido.")
+    @NotBlank(message = "The game purchase link must be completed.")
     private String buyGame;
 
     public GameRecordDto(GameModel game) {

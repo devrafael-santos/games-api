@@ -10,5 +10,4 @@ import java.util.UUID;
 public interface GameRepository extends JpaRepository<GameModel, UUID> {
 
     boolean existsByGenres(String[] genres);
-    boolean existsByPlatforms(String[] platforms);
 }
