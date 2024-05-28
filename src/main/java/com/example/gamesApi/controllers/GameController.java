@@ -2,80 +2,89 @@ package com.example.gamesApi.controllers;
 
 
 import com.example.gamesApi.dto.GameRecordDto;
-import com.example.gamesApi.exception.ResourceNotFoundException;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
-@RestController
 @RequestMapping("/games")
+@RestController
 public class GameController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping
-    public ResponseEntity<?> getGames() {
-        List<GameModel> games = gameService.getAllGame();
+    @GetMapping()
+    public ResponseEntity<List<GameModel>> getGames() {
+        List<GameModel> games = gameService.getAllGames();
+
+        for(GameModel game : games){
+            game.add(linkTo(methodOn(GameController.class).getGame(game.getId())).withSelfRel());
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(games);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<GameRecordDto> getGame(@PathVariable(value = "id") UUID id){
-        GameRecordDto gameDTO = gameService.getOneGame(id);
+    public ResponseEntity<Object> getGame(@PathVariable(value = "id") UUID id){
+        var gameO = gameService.getOne(id);
 
-        if(gameDTO != null){
-            return ResponseEntity.status(HttpStatus.OK).body(gameDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if(gameO.getClass().equals(String.class)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(gameO);
         }
+
+        GameModel game = new GameModel();
+
+        BeanUtils.copyProperties(gameO, game);
+
+        game.add(linkTo(methodOn(GameController.class).getGames()).withRel("Game List"));
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
-    @PostMapping
-    public ResponseEntity<?> saveGame(@RequestBody @Valid GameModel gameModel){
-        try {
-            GameRecordDto gameRecordDto = gameService.createGame(gameModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body(gameRecordDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e);
+    @PostMapping()
+    public ResponseEntity<Object> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
+        var game = gameService.create(gameRecordDto);
+
+        if(game.getClass() == String.class){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(game);
         }
+        return ResponseEntity.status(HttpStatus.CREATED).body(game);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> DeleteGame(@PathVariable(value = "id") UUID id){
-        try {
-            gameService.deleteGame(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Game deleted successfully.");
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<Object> DeleteGame(@PathVariable(value = "id") UUID id){
+        var game = gameService.delete(id);
+
+        if(game == "Game not found."){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(game);
         }
+        return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateGame(@PathVariable(value = "id") UUID id,
-                                         @RequestBody @Valid GameModel gameModel){
-        try {
-            GameRecordDto gameRecordDto = gameService.updateGame(id, gameModel);
-            return ResponseEntity.status(HttpStatus.OK).body(gameRecordDto);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<Object> updateGame(@PathVariable(value = "id") UUID id,
+                                         @RequestBody @Valid GameRecordDto gameRecordDto){
+
+        var game = gameService.update(id, gameRecordDto);
+
+        if(game.getClass() == String.class){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(game);
         }
+        return ResponseEntity.status(HttpStatus.OK).body(game);
     }
+
+
 }
