@@ -33,7 +33,7 @@ public class GameService {
     }
 
 
-    public List<GameModel> getAll(){
+    public List<GameModel> getAllGames(){
         return gameRepository.findAll();
     }
 

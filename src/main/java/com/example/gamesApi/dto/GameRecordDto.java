@@ -3,11 +3,12 @@ package com.example.gamesApi.dto;
 import com.example.gamesApi.models.GameModel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.util.UUID;
 
-
+@Data
 public class GameRecordDto {
     private UUID id;
 
@@ -26,9 +27,6 @@ public class GameRecordDto {
     private String urlImage;
 
     @NotBlank
-    private String urlBanner;
-
-    @NotBlank
     private String releaseDate;
 
     @NotBlank
@@ -45,81 +43,4 @@ public class GameRecordDto {
     public GameRecordDto(GameModel game) {
         BeanUtils.copyProperties(game, this);
     }
-
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String[] getGenres() {
-        return genres;
-    }
-
-    public void setGenres(String[] genres) {
-        this.genres = genres;
-    }
-
-    public String[] getPlatforms() {
-        return platforms;
-    }
-
-    public void setPlatforms(String[] platforms) {
-        this.platforms = platforms;
-    }
-
-    public int getAgeGroup() {
-        return ageGroup;
-    }
-
-    public void setAgeGroup(int ageGroup) {
-        this.ageGroup = ageGroup;
-    }
-
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
-    }
-
-    public String getUrlBanner() {
-        return urlBanner;
-    }
-
-    public void setUrlBanner(String urlBanner) {
-        this.urlBanner = urlBanner;
-    }
-
-    public String getAddedTime() {
-        return addedTime;
-    }
-
-    public void setAddedTime(String addedTime) {
-        this.addedTime = addedTime;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
-
-    public String getBuyGame() {return buyGame;}
-
-    public void setBuyGame(String buyGame) {this.buyGame = buyGame;}
 }

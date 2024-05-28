@@ -7,26 +7,25 @@ import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@RequestMapping("/games")
 @RestController
 public class GameController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping("/games")
+    @GetMapping()
     public ResponseEntity<List<GameModel>> getGames() {
-        List<GameModel> games = gameService.getAll();
+        List<GameModel> games = gameService.getAllGames();
 
         for(GameModel game : games){
             game.add(linkTo(methodOn(GameController.class).getGame(game.getId())).withSelfRel());
@@ -36,7 +35,7 @@ public class GameController {
     }
 
 
-    @GetMapping("/games/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getGame(@PathVariable(value = "id") UUID id){
         var gameO = gameService.getOne(id);
 
@@ -54,7 +53,7 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
-    @PostMapping("/games")
+    @PostMapping()
     public ResponseEntity<Object> saveGame(@RequestBody @Valid GameRecordDto gameRecordDto){
         var game = gameService.create(gameRecordDto);
 
@@ -65,7 +64,7 @@ public class GameController {
     }
 
 
-    @DeleteMapping("/games/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> DeleteGame(@PathVariable(value = "id") UUID id){
         var game = gameService.delete(id);
 
@@ -75,7 +74,7 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
 
-    @PutMapping("/games/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateGame(@PathVariable(value = "id") UUID id,
                                          @RequestBody @Valid GameRecordDto gameRecordDto){
 
