@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
+import org.springframework.hateoas.Link;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-public class GameRecordDto {
+public class GameRecordDto implements Serializable {
     private UUID id;
 
     @NotBlank
@@ -18,7 +20,6 @@ public class GameRecordDto {
     private String[] genres;
 
     private String[] platforms;
-
 
     @NotNull
     private int ageGroup;
@@ -42,5 +43,9 @@ public class GameRecordDto {
 
     public GameRecordDto(GameModel game) {
         BeanUtils.copyProperties(game, this);
+    }
+
+    public void add(Link gameList) {
+
     }
 }
