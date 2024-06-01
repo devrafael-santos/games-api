@@ -1,0 +1,12 @@
+ervices:
+  postgres:
+    container_name: postgres-db
+    image: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "games-api"
+    ports:
+      - 5432:5432
+    restart: always
+    
