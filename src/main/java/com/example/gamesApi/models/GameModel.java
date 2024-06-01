@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "games")
 public class GameModel extends RepresentationModel<GameModel> implements Serializable {
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
