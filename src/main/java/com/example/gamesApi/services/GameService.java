@@ -1,6 +1,7 @@
 package com.example.gamesApi.services;
 
 import com.example.gamesApi.dto.GameRecordDto;
+import com.example.gamesApi.exceptions.GameAlreadyExistsException;
 import com.example.gamesApi.exceptions.IncorrectGenreException;
 import com.example.gamesApi.exceptions.IncorrectPlatformException;
 import com.example.gamesApi.exceptions.ResourceNotFoundException;
@@ -43,8 +44,13 @@ public class GameService {
 
     public GameModel createGame(GameRecordDto gameRecordDto) {
 
-        var genres = gameRecordDto.getGenres();
-        var platforms = gameRecordDto.getPlatforms();
+        String[] genres = gameRecordDto.getGenres();
+        String[] platforms = gameRecordDto.getPlatforms();
+
+        if(gameRepository.existsByTitle(gameRecordDto.getTitle())){
+            throw new GameAlreadyExistsException("Game already exists.");
+        }
+
 
         //verifying the genres attribute
         for (int i = 0; i <= genres.length - 1; i++) {
@@ -109,8 +115,8 @@ public class GameService {
             throw new ResourceNotFoundException("Game not found.");
         }
 
-        var genres = gameRecordDto.getGenres();
-        var platforms = gameRecordDto.getPlatforms();
+        String[] genres = gameRecordDto.getGenres();
+        String[] platforms = gameRecordDto.getPlatforms();
         String addedTime = game.get().getAddedTime();
         UUID gameId = game.get().getId();
 
