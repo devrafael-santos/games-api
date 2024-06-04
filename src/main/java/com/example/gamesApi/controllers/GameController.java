@@ -5,12 +5,11 @@ import com.example.gamesApi.dto.GameRecordDto;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,7 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/games")
 @RestController
 public class GameController implements Serializable {
-    @Autowired
+
     private GameService gameService;
 
     @GetMapping()
@@ -50,7 +49,8 @@ public class GameController implements Serializable {
         gameDto.add(linkTo(methodOn(GameController.class).getAll()).withRel("Game List"));
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
@@ -66,7 +66,8 @@ public class GameController implements Serializable {
         game = new GameRecordDto(gameService.createGame(gameRecordDto));
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(game);
@@ -80,7 +81,8 @@ public class GameController implements Serializable {
         gameService.deleteGame(id);
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body("Game deleted");
@@ -96,7 +98,8 @@ public class GameController implements Serializable {
         game = new GameRecordDto(gameService.updateGame(id, gameRecordDto));
         } catch (RuntimeException e){
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(game);
