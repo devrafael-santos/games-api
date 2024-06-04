@@ -50,7 +50,8 @@ public class GameController implements Serializable {
         gameDto.add(linkTo(methodOn(GameController.class).getAll()).withRel("Game List"));
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
@@ -66,7 +67,8 @@ public class GameController implements Serializable {
         game = new GameRecordDto(gameService.createGame(gameRecordDto));
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(game);
@@ -80,7 +82,8 @@ public class GameController implements Serializable {
         gameService.deleteGame(id);
 
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body("Game deleted");
@@ -96,7 +99,8 @@ public class GameController implements Serializable {
         game = new GameRecordDto(gameService.updateGame(id, gameRecordDto));
         } catch (RuntimeException e){
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(game);
