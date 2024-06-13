@@ -1,6 +1,6 @@
 package com.example.gamesApi.services;
 
-import com.example.gamesApi.dto.GameRecordDto;
+import com.example.gamesApi.dto.GameDto;
 import com.example.gamesApi.exceptions.GameAlreadyExistsException;
 import com.example.gamesApi.exceptions.ResourceNotFoundException;
 import com.example.gamesApi.models.GameModel;
@@ -42,21 +42,19 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public GameModel createGame(GameRecordDto gameRecordDto) {
+    public GameModel createGame(GameDto gameDto) {
 
-        String[] genres = gameRecordDto.getGenres();
-        String[] platforms = gameRecordDto.getPlatforms();
+        String[] genres = gameDto.getGenres();
+        String[] platforms = gameDto.getPlatforms();
 
-        if(gameRepository.existsByTitle(gameRecordDto.getTitle())){
+        if(gameRepository.existsByTitle(gameDto.getTitle())){
             throw new GameAlreadyExistsException("Game already exists.");
         }
 
-
-        //verifying the genres attribute
         new ValidateGenres(genres);
         new ValidatePlatforms(platforms);
 
-        GameModel gameModel = new GameModel(gameRecordDto);
+        GameModel gameModel = new GameModel(gameDto);
 
         gameModel.setAddedTime(dateFormat.format(calendar.getTime()));
 
@@ -64,7 +62,7 @@ public class GameService {
     }
 
 
-    public GameModel updateGame(UUID id, GameRecordDto gameRecordDto){
+    public GameModel updateGame(UUID id, GameDto gameDto){
 
         Optional<GameModel> game = gameRepository.findById(id);
 
@@ -72,8 +70,8 @@ public class GameService {
             throw new ResourceNotFoundException("Game not found.");
         }
 
-        String[] genres = gameRecordDto.getGenres();
-        String[] platforms = gameRecordDto.getPlatforms();
+        String[] genres = gameDto.getGenres();
+        String[] platforms = gameDto.getPlatforms();
         String addedTime = game.get().getAddedTime();
 
 
@@ -81,7 +79,7 @@ public class GameService {
         new ValidatePlatforms(platforms);
 
 
-        GameModel gameModel = new GameModel(gameRecordDto);
+        GameModel gameModel = new GameModel(gameDto);
         gameModel.setAddedTime(addedTime);
 
         gameRepository.delete(game.get());
