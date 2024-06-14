@@ -10,8 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Optional;
-
 @DataJpaTest
 @ActiveProfiles("test")
 class GameRepositoryTest {
@@ -26,8 +24,8 @@ class GameRepositoryTest {
     @DisplayName("Should get Game successfully from database")
     void existsByTitleSuccess() {
 
-        String genres[] = {"Adventure"};
-        String platforms[] = {"PC"};
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
 
         GameDto gameDto = new GameDto("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "13/06/2024", "link for buy");
         this.createGame(gameDto);
@@ -48,9 +46,8 @@ class GameRepositoryTest {
         assertThat(result).isFalse();
     }
 
-    private GameModel createGame(GameDto gameDto){
+    private void createGame(GameDto gameDto){
         GameModel gameModel = new GameModel(gameDto);
         this.entityManager.persist(gameModel);
-        return gameModel;
     }
 }
