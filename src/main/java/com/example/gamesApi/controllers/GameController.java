@@ -1,14 +1,13 @@
 package com.example.gamesApi.controllers;
 
 
-import com.example.gamesApi.dto.GameRecordDto;
+import com.example.gamesApi.dto.GameDto;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -22,6 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 public class GameController implements Serializable {
 
+    @Autowired
     private GameService gameService;
 
     @GetMapping()
@@ -39,12 +39,12 @@ public class GameController implements Serializable {
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable(value = "id") UUID id){
 
-        GameRecordDto gameDto;
+        GameDto gameDto;
 
         try {
         var game = gameService.getGame(id);
 
-        gameDto = new GameRecordDto(game);
+        gameDto = new GameDto(game);
 
         gameDto.add(linkTo(methodOn(GameController.class).getAll()).withRel("Game List"));
 
@@ -58,12 +58,12 @@ public class GameController implements Serializable {
     }
 
     @PostMapping()
-    public ResponseEntity<?> saveOne(@RequestBody @Valid GameRecordDto gameRecordDto){
-        GameRecordDto game;
+    public ResponseEntity<?> saveOne(@RequestBody @Valid GameDto gameDto){
+        GameDto game;
 
         try {
 
-        game = new GameRecordDto(gameService.createGame(gameRecordDto));
+        game = new GameDto(gameService.createGame(gameDto));
 
         } catch (RuntimeException e) {
             System.out.println(e);
@@ -90,12 +90,12 @@ public class GameController implements Serializable {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOne(@PathVariable(value = "id") UUID id,
-                                         @RequestBody @Valid GameRecordDto gameRecordDto){
-        GameRecordDto game;
+                                         @RequestBody @Valid GameDto gameDto){
+        GameDto game;
 
         try {
 
-        game = new GameRecordDto(gameService.updateGame(id, gameRecordDto));
+        game = new GameDto(gameService.updateGame(id, gameDto));
         } catch (RuntimeException e){
 
             System.out.println(e);
