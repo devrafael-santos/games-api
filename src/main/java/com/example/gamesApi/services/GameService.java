@@ -1,7 +1,6 @@
 package com.example.gamesApi.services;
 
 import com.example.gamesApi.dto.GameDto;
-import com.example.gamesApi.exceptions.GameAlreadyExistsException;
 import com.example.gamesApi.exceptions.ResourceNotFoundException;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.repositories.GameRepository;
@@ -48,7 +47,7 @@ public class GameService {
         String[] platforms = gameDto.getPlatforms();
 
         if(gameRepository.existsByTitle(gameDto.getTitle())){
-            throw new GameAlreadyExistsException("Game already exists.");
+            throw new ResourceNotFoundException("Game already exists.");
         }
 
         new ValidateGenres(genres);
