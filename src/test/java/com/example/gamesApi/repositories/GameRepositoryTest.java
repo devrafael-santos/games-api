@@ -22,13 +22,13 @@ class GameRepositoryTest {
 
     @Test
     @DisplayName("Should get Game successfully from database")
-    void existsByTitleSuccess() {
+    void existsByTitleCase1() {
 
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
         GameDto gameDto = new GameDto("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "13/06/2024", "link for buy");
-        this.createGame(gameDto);
+        this.createOneGame(gameDto);
 
         boolean result = this.gameRepository.existsByTitle(gameDto.getTitle());
 
@@ -37,7 +37,7 @@ class GameRepositoryTest {
 
     @Test
     @DisplayName("Should not get Game successfully from database when Game not exists")
-    void existsByTitleFailed() {
+    void existsByTitleCase2() {
 
         String title = "Minecraft";
 
@@ -46,7 +46,7 @@ class GameRepositoryTest {
         assertThat(result).isFalse();
     }
 
-    private void createGame(GameDto gameDto){
+    private void createOneGame(GameDto gameDto){
         GameModel gameModel = new GameModel(gameDto);
         this.entityManager.persist(gameModel);
     }
