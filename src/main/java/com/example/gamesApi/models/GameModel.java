@@ -38,7 +38,6 @@ public class GameModel extends RepresentationModel<GameModel> implements Seriali
 
 
     public GameModel(GameDto gameDto) {BeanUtils.copyProperties(gameDto, this);}
-
     public GameModel() {}
 
 }
