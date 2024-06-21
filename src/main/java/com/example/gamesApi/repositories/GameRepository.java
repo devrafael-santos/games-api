@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface GameRepository extends JpaRepository<GameModel, UUID> {
 
     boolean existsByTitle(String title);
+
+    boolean isEqualsById(UUID id1, UUID id2);
 }
