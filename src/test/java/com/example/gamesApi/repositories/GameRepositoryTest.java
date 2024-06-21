@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
@@ -23,11 +26,11 @@ class GameRepositoryTest {
     @Test
     @DisplayName("Should get Game successfully from database")
     void existsByTitleCase1() {
-
+        UUID id = UUID.randomUUID();
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "13/06/2024", "link for buy");
+        GameDto gameDto = new GameDto(id, "Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         this.createOneGame(gameDto);
 
         boolean result = this.gameRepository.existsByTitle(gameDto.getTitle());
