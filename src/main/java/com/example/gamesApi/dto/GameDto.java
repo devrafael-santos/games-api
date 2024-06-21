@@ -45,7 +45,8 @@ public class GameDto implements Serializable {
         BeanUtils.copyProperties(game, this);
     }
 
-    public GameDto(String title, String[] genres, String[] platforms, int ageGroup, String urlImage, String releaseDate, String synopsis, String addedTime, String buyGame) {
+    public GameDto(UUID id, String title, String[] genres, String[] platforms, int ageGroup, String urlImage, String releaseDate, String synopsis, String buyGame) {
+        this.id = id;
         this.title = title;
         this.genres = genres;
         this.platforms = platforms;
@@ -53,7 +54,6 @@ public class GameDto implements Serializable {
         this.urlImage = urlImage;
         this.releaseDate = releaseDate;
         this.synopsis = synopsis;
-        this.addedTime = addedTime;
         this.buyGame = buyGame;
     }
 
