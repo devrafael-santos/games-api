@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-public class GameRecordDto implements Serializable {
+public class GameDTO implements Serializable {
     private UUID id;
 
     @NotBlank
@@ -38,11 +38,22 @@ public class GameRecordDto implements Serializable {
     @NotBlank
     private String buyGame;
 
-    public GameRecordDto() {
+    public GameDTO() {
     }
 
-    public GameRecordDto(GameModel game) {
+    public GameDTO(GameModel game) {
         BeanUtils.copyProperties(game, this);
+    }
+
+    public GameDTO(String title, String[] genres, String[] platforms, int ageGroup, String urlImage, String releaseDate, String synopsis, String buyGame) {
+        this.title = title;
+        this.genres = genres;
+        this.platforms = platforms;
+        this.ageGroup = ageGroup;
+        this.urlImage = urlImage;
+        this.releaseDate = releaseDate;
+        this.synopsis = synopsis;
+        this.buyGame = buyGame;
     }
 
     public void add(Link gameList) {

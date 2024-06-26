@@ -1,6 +1,6 @@
 package com.example.gamesApi.services;
 
-import com.example.gamesApi.dto.GameDto;
+import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.exceptions.GameAlreadyExistsException;
 import com.example.gamesApi.exceptions.ResourceNotFoundException;
 import com.example.gamesApi.models.GameModel;
@@ -42,7 +42,7 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public GameModel createGame(GameDto gameDto) {
+    public GameModel createGame(GameDTO gameDto) {
 
         String[] genres = gameDto.getGenres();
         String[] platforms = gameDto.getPlatforms();
@@ -62,7 +62,7 @@ public class GameService {
     }
 
 
-    public GameModel updateGame(UUID id, GameDto gameDto){
+    public GameModel updateGame(UUID id, GameDTO gameDto){
 
         Optional<GameModel> game = gameRepository.findById(id);
 
