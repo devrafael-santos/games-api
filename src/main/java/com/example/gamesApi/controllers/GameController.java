@@ -1,7 +1,7 @@
 package com.example.gamesApi.controllers;
 
 
-import com.example.gamesApi.dto.GameDto;
+import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.services.GameService;
 import jakarta.validation.Valid;
@@ -39,12 +39,12 @@ public class GameController implements Serializable {
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable(value = "id") UUID id){
 
-        GameDto gameDto;
+        GameDTO gameDto;
 
         try {
         var game = gameService.getGame(id);
 
-        gameDto = new GameDto(game);
+        gameDto = new GameDTO(game);
 
         gameDto.add(linkTo(methodOn(GameController.class).getAll()).withRel("Game List"));
 
@@ -58,12 +58,12 @@ public class GameController implements Serializable {
     }
 
     @PostMapping()
-    public ResponseEntity<?> saveOne(@RequestBody @Valid GameDto gameDto){
-        GameDto game;
+    public ResponseEntity<?> saveOne(@RequestBody @Valid GameDTO gameDto){
+        GameDTO game;
 
         try {
 
-        game = new GameDto(gameService.createGame(gameDto));
+        game = new GameDTO(gameService.createGame(gameDto));
 
         } catch (RuntimeException e) {
             System.out.println(e);
@@ -90,12 +90,12 @@ public class GameController implements Serializable {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOne(@PathVariable(value = "id") UUID id,
-                                         @RequestBody @Valid GameDto gameDto){
-        GameDto game;
+                                         @RequestBody @Valid GameDTO gameDto){
+        GameDTO game;
 
         try {
 
-        game = new GameDto(gameService.updateGame(id, gameDto));
+        game = new GameDTO(gameService.updateGame(id, gameDto));
         } catch (RuntimeException e){
 
             System.out.println(e);

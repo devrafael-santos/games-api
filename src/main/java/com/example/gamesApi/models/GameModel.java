@@ -1,6 +1,6 @@
 package com.example.gamesApi.models;
 
-import com.example.gamesApi.dto.GameDto;
+import com.example.gamesApi.dto.GameDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -37,7 +37,7 @@ public class GameModel extends RepresentationModel<GameModel> implements Seriali
     private String buyGame;
 
 
-    public GameModel(GameDto gameDto) {BeanUtils.copyProperties(gameDto, this);}
+    public GameModel(GameDTO gameDto) {BeanUtils.copyProperties(gameDto, this);}
     public GameModel() {}
 
 }

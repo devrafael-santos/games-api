@@ -1,6 +1,6 @@
 package com.example.gamesApi.services;
 
-import com.example.gamesApi.dto.GameDto;
+import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.exceptions.GameAlreadyExistsException;
 import com.example.gamesApi.exceptions.ResourceNotFoundException;
 import com.example.gamesApi.models.GameModel;
@@ -10,19 +10,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.when;
 
 
@@ -40,19 +38,17 @@ class GameServiceTest {
     @Test
     @DisplayName("Should get a game successfully when the ID is valid")
     void getGameCase1() {
-        UUID id = UUID.randomUUID();
-
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto(id, "Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
 
-        Mockito.when(gameRepository.save(gameModel)).thenReturn(new GameModel());
+        when(gameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
-        Mockito.when(gameRepository.findById(gameModel.getId()));
+        Optional<GameModel> result = Optional.of(this.gameService.getGame(gameModel.getId()));
 
+        assertThat(result.get() == gameModel).isTrue();
     }
 
     @Test
@@ -64,7 +60,20 @@ class GameServiceTest {
     }
 
     @Test
+    @DisplayName("Should return all games saved")
     void getAllGames() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
+
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        this.gameRepository.save(new GameModel(gameDto));
+
+        List<GameModel> listForTest = this.gameRepository.findAll();
+
+        when(gameService.getAllGames()).thenReturn(listForTest);
+        List<GameModel> result = this.gameService.getAllGames();
+
+        assertThat(listForTest == result).isTrue();
     }
 
     @Test
@@ -75,12 +84,12 @@ class GameServiceTest {
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto(id, "Roblox", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Roblox", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
         GameModel result = new GameModel(gameDto);
 
 
-        Mockito.when(gameRepository.existsByTitle(gameDto.getTitle())).thenReturn(false);
+        when(gameRepository.existsByTitle(gameDto.getTitle())).thenReturn(false);
 
         when(this.gameRepository.save(gameModel)).thenReturn(gameModel);
 
@@ -97,7 +106,7 @@ class GameServiceTest {
         String[] genres = {"Advent"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto(id, "Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
 
@@ -106,11 +115,10 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw and Exception and not create a Game when some Platform is invalid")
     void createGameCase3() {
-        UUID id = UUID.randomUUID();
         String[] genres = {"Adventure"};
         String[] platforms = {"P"};
 
-        GameDto gameDto = new GameDto(id, "Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
     }
@@ -118,13 +126,12 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw and Exception and not create a game when game name already exists")
     void createGameCase4() {
-        UUID id = UUID.randomUUID();
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto(id, "Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
-        Mockito.when(gameRepository.existsByTitle(gameDto.getTitle())).thenReturn(true);
+        when(gameRepository.existsByTitle(gameDto.getTitle())).thenReturn(true);
 
         Assertions.assertThrows(GameAlreadyExistsException.class, () -> gameService.createGame(gameDto));
     }
@@ -132,6 +139,28 @@ class GameServiceTest {
     @Test
     @DisplayName("Should update a new game successfully")
     void updateGameCase1() {
+        String[] oldGenres = {"Adventure"};
+        String[] newGenres = {"Action"};
+
+        String[] oldPlatforms = {"PC"};
+        String[] newPlatforms = {"PC", "PS5"};
+
+        GameDTO oldGameDto = new GameDTO("Minecraft", oldGenres, oldPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel = new GameModel(oldGameDto);
+
+        GameDTO newGameDTO = new GameDTO("Minecraft", newGenres, newPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel newGameModel = new GameModel(newGameDTO);
+
+        Optional<GameModel> optionalGameModel = Optional.of(gameModel);
+
+        when(gameRepository.findById(gameModel.getId())).thenReturn(optionalGameModel);
+        gameRepository.delete(optionalGameModel.get());
+
+        when(gameRepository.save(newGameModel)).thenReturn(newGameModel);
+
+        GameModel result = this.gameService.updateGame(gameModel.getId(), newGameDTO);
+
+        assertThat(result == newGameModel).isTrue();
     }
 
     @Test
@@ -142,52 +171,55 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw an Exception and not create a game when the game Genre are invalid")
     void updateGameCase4() {
-        UUID id = UUID.randomUUID();
-
         String[] validGenres = {"Adventure"};
         String[] invalidGenres = {"Advent"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto(id,"Minecraft", validGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Minecraft", validGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
-        GameDto InvalidGameDto = new GameDto(id,"Minecraft", invalidGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO invalidGameDTO = new GameDTO("Minecraft", invalidGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
         when(this.gameRepository.save(gameModel)).thenReturn(gameModel);
 
         when(this.gameRepository.existsById(gameModel.getId())).thenReturn(false);
 
-        when(this.gameRepository.findById(id)).thenReturn(Optional.of(gameModel));
+        when(this.gameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.gameService.updateGame(gameModel.getId(), InvalidGameDto));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test
     @DisplayName("Should throw an Exception and not create a game when the game Platforms are invalid")
     void updateGameCase5() {
-        UUID id = UUID.randomUUID();
-
         String[] genres = {"Adventure"};
         String[] validPlatforms = {"PC"};
         String[] invalidPlatforms = {"P"};
 
-        GameDto gameDto = new GameDto(id,"Minecraft", genres, validPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Minecraft", genres, validPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
-        GameDto InvalidGameDto = new GameDto(id,"Minecraft", genres, invalidPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO invalidGameDTO = new GameDTO("Minecraft", genres, invalidPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
 
 
         when(this.gameRepository.save(gameModel)).thenReturn(gameModel);
 
         when(this.gameRepository.existsById(gameModel.getId())).thenReturn(false);
 
-        when(this.gameRepository.findById(id)).thenReturn(Optional.of(gameModel));
+        when(this.gameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.gameService.updateGame(gameModel.getId(), InvalidGameDto));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test
-    void deleteGame() {
+    @DisplayName("Should delete a game successfully")
+    void deleteGameCase1() {
+    }
+
+    @Test
+    @DisplayName("Should throw and Exception when game not exists")
+    void deleteGameCase2(){
+
     }
 
 }
