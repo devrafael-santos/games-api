@@ -1,6 +1,6 @@
 package com.example.gamesApi.repositories;
 
-import com.example.gamesApi.dto.GameDto;
+import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.models.GameModel;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +30,7 @@ class GameRepositoryTest {
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
-        GameDto gameDto = new GameDto(id, "Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         this.createOneGame(gameDto);
 
         boolean result = this.gameRepository.existsByTitle(gameDto.getTitle());
@@ -49,7 +49,7 @@ class GameRepositoryTest {
         assertThat(result).isFalse();
     }
 
-    private void createOneGame(GameDto gameDto){
+    private void createOneGame(GameDTO gameDto){
         GameModel gameModel = new GameModel(gameDto);
         this.entityManager.persist(gameModel);
     }
