@@ -50,7 +50,7 @@ public class GameController implements Serializable {
 
         } catch (RuntimeException e) {
             System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
@@ -67,7 +67,7 @@ public class GameController implements Serializable {
 
         } catch (RuntimeException e) {
             System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(game);
@@ -82,7 +82,7 @@ public class GameController implements Serializable {
 
         } catch (RuntimeException e) {
             System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body("Game deleted");
@@ -99,7 +99,7 @@ public class GameController implements Serializable {
         } catch (RuntimeException e){
 
             System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("RuntimeException");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(game);
