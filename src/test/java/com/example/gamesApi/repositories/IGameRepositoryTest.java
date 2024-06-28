@@ -15,10 +15,10 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class GameRepositoryTest {
+class IGameRepositoryTest {
 
     @Autowired
-    GameRepository gameRepository;
+    IGameRepository IGameRepository;
 
     @Autowired
     EntityManager entityManager;
@@ -33,7 +33,7 @@ class GameRepositoryTest {
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         this.createOneGame(gameDto);
 
-        boolean result = this.gameRepository.existsByTitle(gameDto.getTitle());
+        boolean result = this.IGameRepository.existsByTitle(gameDto.getTitle());
 
         assertThat(result).isTrue();
     }
@@ -44,12 +44,12 @@ class GameRepositoryTest {
 
         String title = "Minecraft";
 
-        boolean result = this.gameRepository.existsByTitle(title);
+        boolean result = this.IGameRepository.existsByTitle(title);
 
         assertThat(result).isFalse();
     }
 
-    private void createOneGame(GameDTO gameDto){
+    private void createOneGame(GameDTO gameDto) {
         GameModel gameModel = new GameModel(gameDto);
         this.entityManager.persist(gameModel);
     }

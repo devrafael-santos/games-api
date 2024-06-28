@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface GameRepository extends JpaRepository<GameModel, UUID> {
+public interface IGameRepository extends JpaRepository<GameModel, UUID> {
 
     boolean existsByTitle(String title);
 
