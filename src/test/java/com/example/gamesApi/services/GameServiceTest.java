@@ -13,13 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -62,12 +60,13 @@ class GameServiceTest {
         String[] platforms = {"PC"};
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-        this.IGameRepository.save(new GameModel(gameDto));
+        IGameRepository.save(new GameModel(gameDto));
+        GameModel gameModel = new GameModel(gameDto);
 
-        List<GameModel> listForTest = this.IGameRepository.findAll();
+        List<GameModel> listForTest = List.of(gameModel);
+        when(IGameRepository.findAll()).thenReturn(listForTest);
 
-        when(gameService.getAllGames()).thenReturn(listForTest);
-        List<GameModel> result = this.gameService.getAllGames();
+        List<GameModel> result = gameService.getAllGames();
 
         assertThat(listForTest == result).isTrue();
     }
@@ -89,11 +88,11 @@ class GameServiceTest {
 
         GameModel result = gameService.createGame(gameDto);
 
-        Assertions.assertEquals(gameModel, result);
+        assertEquals(gameModel, result);
     }
 
     @Test
-    @DisplayName("Should throw and Exception and not create a Game when some Genre is invalid")
+    @DisplayName("Should throw and Exception and not create a Game when some Genres is invalid")
     void createGameCase2() {
         String[] genres = {"Advent"};
         String[] platforms = {"PC"};
@@ -105,7 +104,7 @@ class GameServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw and Exception and not create a Game when some Platform is invalid")
+    @DisplayName("Should throw and Exception and not create a Game when some Platforms is invalid")
     void createGameCase3() {
         String[] genres = {"Adventure"};
         String[] platforms = {"P"};
@@ -146,11 +145,10 @@ class GameServiceTest {
         Optional<GameModel> optionalGameModel = Optional.of(gameModel);
 
         when(IGameRepository.findById(gameModel.getId())).thenReturn(optionalGameModel);
-        IGameRepository.delete(optionalGameModel.get());
 
         when(IGameRepository.save(newGameModel)).thenReturn(newGameModel);
 
-        GameModel result = this.gameService.updateGame(gameModel.getId(), newGameDTO);
+        GameModel result = gameService.updateGame(gameModel.getId(), newGameDTO);
 
         assertThat(result == newGameModel).isTrue();
     }
@@ -163,11 +161,13 @@ class GameServiceTest {
 
         GameDTO gameDto = new GameDTO("Minecraft", oldGenres, oldPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
 
+        when(IGameRepository.findById(gameDto.getId())).thenReturn(Optional.empty());
+
         Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.updateGame(gameDto.getId(), gameDto));
     }
 
     @Test
-    @DisplayName("Should throw an Exception and not create a game when the game Genre are invalid")
+    @DisplayName("Should throw an Exception and not create a game when the game Genres are invalid")
     void updateGameCase4() {
         String[] validGenres = {"Adventure"};
         String[] invalidGenres = {"Advent"};
@@ -175,11 +175,12 @@ class GameServiceTest {
 
         GameDTO gameDto = new GameDTO("Minecraft", validGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
+
         GameDTO invalidGameDTO = new GameDTO("Minecraft", invalidGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
-        when(this.IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
+        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.gameService.updateGame(gameModel.getId(), invalidGameDTO));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test
@@ -191,21 +192,38 @@ class GameServiceTest {
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, validPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
+
         GameDTO invalidGameDTO = new GameDTO("Minecraft", genres, invalidPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
 
-        when(this.IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
+        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.gameService.updateGame(gameModel.getId(), invalidGameDTO));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test
     @DisplayName("Should delete a game successfully")
     void deleteGameCase1() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel = new GameModel(gameDto);
+
+        IGameRepository.delete(gameModel);
+
+        verify(IGameRepository, atLeastOnce()).delete(gameModel);
     }
 
     @Test
     @DisplayName("Should throw and Exception when game not exists")
     void deleteGameCase2() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel = new GameModel(gameDto);
+
+        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.deleteGame(gameModel.getId()));
 
     }
 
