@@ -1,13 +1,11 @@
 package com.example.gamesApi.controllers;
 
-import com.example.gamesApi.repositories.GameRepository;
+import com.example.gamesApi.repositories.IGameRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 class ameControllerTest {
@@ -15,7 +13,7 @@ class ameControllerTest {
     private GameController gameController;
 
     @Mock
-    private GameRepository gameRepositoryMock;
+    private IGameRepository IGameRepositoryMock;
 
 
     @Test
