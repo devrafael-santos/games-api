@@ -29,9 +29,18 @@ class GameServiceTest {
     @InjectMocks
     private GameService gameService;
 
+
+    @Test
+    @DisplayName("Should throw an Exception when the ID is invalid")
+    void getGameCase1() {
+        UUID id = UUID.randomUUID();
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> this.gameService.getGame(id));
+    }
+
     @Test
     @DisplayName("Should get a game successfully when the ID is valid")
-    void getGameCase1() {
+    void getGameCase2() {
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
@@ -43,14 +52,6 @@ class GameServiceTest {
         Optional<GameModel> result = Optional.of(this.gameService.getGame(gameModel.getId()));
 
         assertThat(result.get() == gameModel).isTrue();
-    }
-
-    @Test
-    @DisplayName("Should throw an Exception when the ID is invalid")
-    void getGameCase2() {
-        UUID id = UUID.randomUUID();
-
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> this.gameService.getGame(id));
     }
 
     @Test
@@ -71,9 +72,46 @@ class GameServiceTest {
         assertThat(listForTest == result).isTrue();
     }
 
+
+    @Test
+    @DisplayName("Should throw and Exception and not create a Game when some Genres is invalid")
+    void createGameCase1() {
+        String[] genres = {"Advent"};
+        String[] platforms = {"PC"};
+
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
+
+    }
+
+    @Test
+    @DisplayName("Should throw and Exception and not create a Game when some Platforms is invalid")
+    void createGameCase2() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"P"};
+
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
+    }
+
+    @Test
+    @DisplayName("Should throw and Exception and not create a game when game name already exists")
+    void createGameCase3() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
+
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+
+        when(IGameRepository.existsByTitle(gameDto.getTitle())).thenReturn(true);
+
+        Assertions.assertThrows(GameAlreadyExistsException.class, () -> gameService.createGame(gameDto));
+    }
+
     @Test
     @DisplayName("Should create a Game successfully")
-    void createGameCase1() {
+    void createGameCase4() {
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         final Calendar calendar = Calendar.getInstance();
 
@@ -92,44 +130,55 @@ class GameServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw and Exception and not create a Game when some Genres is invalid")
-    void createGameCase2() {
-        String[] genres = {"Advent"};
-        String[] platforms = {"PC"};
-
-        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
-
-    }
-
-    @Test
-    @DisplayName("Should throw and Exception and not create a Game when some Platforms is invalid")
-    void createGameCase3() {
-        String[] genres = {"Adventure"};
-        String[] platforms = {"P"};
-
-        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
-    }
-
-    @Test
-    @DisplayName("Should throw and Exception and not create a game when game name already exists")
-    void createGameCase4() {
+    @DisplayName("Should throw an Exception and not update a game when the game is not found")
+    void updateGameCase1() {
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
-        when(IGameRepository.existsByTitle(gameDto.getTitle())).thenReturn(true);
+        when(IGameRepository.findById(gameDto.getId())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(GameAlreadyExistsException.class, () -> gameService.createGame(gameDto));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.updateGame(gameDto.getId(), gameDto));
+    }
+
+    @Test
+    @DisplayName("Should throw an Exception and not create a game when the game Genres are invalid")
+    void updateGameCase2() {
+        String[] validGenres = {"Adventure"};
+        String[] invalidGenres = {"Advent"};
+        String[] platforms = {"PC"};
+
+        GameDTO validGameDto = new GameDTO("Minecraft", validGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel = new GameModel(validGameDto);
+
+        GameDTO invalidGameDTO = new GameDTO("Minecraft", invalidGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+
+        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
+    }
+
+    @Test
+    @DisplayName("Should throw an Exception and not create a game when the game Platforms are invalid")
+    void updateGameCase3() {
+        String[] genres = {"Adventure"};
+        String[] validPlatforms = {"PC"};
+        String[] invalidPlatforms = {"P"};
+
+        GameDTO validGameDto = new GameDTO("Minecraft", genres, validPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel = new GameModel(validGameDto);
+
+        GameDTO invalidGameDTO = new GameDTO("Minecraft", genres, invalidPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
+
+        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test
     @DisplayName("Should update a new game successfully")
-    void updateGameCase1() {
+    void updateGameCase4() {
         String[] oldGenres = {"Adventure"};
         String[] newGenres = {"Action"};
 
@@ -154,68 +203,8 @@ class GameServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw an Exception and not update a game when the game is not found")
-    void updateGameCase2() {
-        String[] oldGenres = {"Adventure"};
-        String[] oldPlatforms = {"PC"};
-
-        GameDTO gameDto = new GameDTO("Minecraft", oldGenres, oldPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
-
-        when(IGameRepository.findById(gameDto.getId())).thenReturn(Optional.empty());
-
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.updateGame(gameDto.getId(), gameDto));
-    }
-
-    @Test
-    @DisplayName("Should throw an Exception and not create a game when the game Genres are invalid")
-    void updateGameCase4() {
-        String[] validGenres = {"Adventure"};
-        String[] invalidGenres = {"Advent"};
-        String[] platforms = {"PC"};
-
-        GameDTO gameDto = new GameDTO("Minecraft", validGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-        GameModel gameModel = new GameModel(gameDto);
-
-        GameDTO invalidGameDTO = new GameDTO("Minecraft", invalidGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-
-        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
-    }
-
-    @Test
-    @DisplayName("Should throw an Exception and not create a game when the game Platforms are invalid")
-    void updateGameCase5() {
-        String[] genres = {"Adventure"};
-        String[] validPlatforms = {"PC"};
-        String[] invalidPlatforms = {"P"};
-
-        GameDTO gameDto = new GameDTO("Minecraft", genres, validPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
-        GameModel gameModel = new GameModel(gameDto);
-
-        GameDTO invalidGameDTO = new GameDTO("Minecraft", genres, invalidPlatforms, 12, "url", "2010", "Synopsis", "link for buy");
-
-        when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
-    }
-
-    @Test
-    @DisplayName("Should delete a game successfully")
-    void deleteGameCase1() {
-        String[] genres = {"Adventure"};
-        String[] platforms = {"PC"};
-        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
-        GameModel gameModel = new GameModel(gameDto);
-
-        IGameRepository.delete(gameModel);
-
-        verify(IGameRepository, atLeastOnce()).delete(gameModel);
-    }
-
-    @Test
     @DisplayName("Should throw and Exception when game not exists")
-    void deleteGameCase2() {
+    void deleteGameCase1() {
         String[] genres = {"Adventure"};
         String[] platforms = {"PC"};
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -225,6 +214,19 @@ class GameServiceTest {
 
         Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.deleteGame(gameModel.getId()));
 
+    }
+
+    @Test
+    @DisplayName("Should delete a game successfully")
+    void deleteGameCase2() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
+        GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel = new GameModel(gameDto);
+
+        IGameRepository.delete(gameModel);
+
+        verify(IGameRepository, atLeastOnce()).delete(gameModel);
     }
 
 }
