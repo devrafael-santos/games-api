@@ -2,7 +2,7 @@ package com.example.gamesApi.services;
 
 import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.exceptions.GameAlreadyExistsException;
-import com.example.gamesApi.exceptions.ResourceNotFoundException;
+import com.example.gamesApi.exceptions.GameNotFoundException;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.repositories.IGameRepository;
 import org.junit.jupiter.api.*;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ class GameServiceTest {
     void getGameCase1() {
         UUID id = UUID.randomUUID();
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> this.gameService.getGame(id));
+        Assertions.assertThrows(GameNotFoundException.class, () -> this.gameService.getGame(id));
     }
 
     @Test
@@ -52,6 +53,29 @@ class GameServiceTest {
         Optional<GameModel> result = Optional.of(this.gameService.getGame(gameModel.getId()));
 
         assertThat(result.get() == gameModel).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should get a list of Games ordered by title")
+    void searchGame() {
+        String[] genres = {"Adventure"};
+        String[] platforms = {"PC"};
+
+        GameDTO gameDto1 = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel1 = new GameModel(gameDto1);
+
+        GameDTO gameDto2 = new GameDTO("Motor Sport", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel2 = new GameModel(gameDto2);
+
+        List<GameModel> listOfGames = new ArrayList<>();
+        listOfGames.add(gameModel1);
+        listOfGames.add(gameModel2);
+
+        when(IGameRepository.findByTitleIgnoreCaseContaining("m", Sort.by(Sort.Direction.ASC, "title"))).thenReturn(listOfGames);
+
+        List<GameModel> result = gameService.searchGames("m");
+
+        Assertions.assertEquals(gameModel1, result.get(0));
     }
 
     @Test
@@ -139,7 +163,7 @@ class GameServiceTest {
 
         when(IGameRepository.findById(gameDto.getId())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.updateGame(gameDto.getId(), gameDto));
+        Assertions.assertThrows(GameNotFoundException.class, () -> gameService.updateGame(gameDto.getId(), gameDto));
     }
 
     @Test
@@ -212,7 +236,7 @@ class GameServiceTest {
 
         when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> gameService.deleteGame(gameModel.getId()));
+        Assertions.assertThrows(GameNotFoundException.class, () -> gameService.deleteGame(gameModel.getId()));
 
     }
 
