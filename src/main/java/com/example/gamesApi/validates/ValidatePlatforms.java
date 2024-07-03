@@ -10,7 +10,7 @@ public class ValidatePlatforms {
 
         public static void validatePlatform(String platform){
             if (!PLATFORMS.contains(platform.toUpperCase())) {
-                throw new IllegalArgumentException("Invalid genre: " + platform);
+                throw new IllegalArgumentException("Invalid Platform: " + platform);
             }
         }
 

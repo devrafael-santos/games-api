@@ -50,19 +50,10 @@ public class GameController implements Serializable {
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable(value = "id") UUID id){
 
-        GameDTO gameDto;
-
-        try {
-        var game = gameService.getGame(id);
-
-        gameDto = new GameDTO(game);
+        GameModel game = gameService.getGame(id);
+        GameDTO gameDto = new GameDTO(game);
 
         gameDto.add(linkTo(methodOn(GameController.class).getAll()).withRel("Game List"));
-
-        } catch (RuntimeException e) {
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
 
         return ResponseEntity.status(HttpStatus.OK).body(gameDto);
 
@@ -70,16 +61,8 @@ public class GameController implements Serializable {
 
     @PostMapping()
     public ResponseEntity<?> saveOne(@RequestBody @Valid GameDTO gameDto){
-        GameDTO game;
 
-        try {
-
-        game = new GameDTO(gameService.createGame(gameDto));
-
-        } catch (RuntimeException e) {
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        GameDTO game = new GameDTO(gameService.createGame(gameDto));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(game);
     }
