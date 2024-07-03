@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "games")
-public class GameModel extends RepresentationModel<GameModel> implements Serializable {
+public class GameModel extends RepresentationModel<GameModel> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

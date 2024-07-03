@@ -8,6 +8,7 @@ import com.example.gamesApi.repositories.IGameRepository;
 import com.example.gamesApi.validates.ValidateGenres;
 import com.example.gamesApi.validates.ValidatePlatforms;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -37,6 +38,10 @@ public class GameService {
 
     public List<GameModel> getAllGames(){
         return IGameRepository.findAll();
+    }
+
+    public List<GameModel> searchGames(String title){
+        return IGameRepository.findByTitleIgnoreCaseContaining(title, Sort.by(Sort.Direction.DESC, "title"));
     }
 
     public GameModel createGame(GameDTO gameDto) {
