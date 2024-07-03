@@ -2,7 +2,7 @@ package com.example.gamesApi.services;
 
 import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.exceptions.GameAlreadyExistsException;
-import com.example.gamesApi.exceptions.ResourceNotFoundException;
+import com.example.gamesApi.exceptions.GameNotFoundException;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.repositories.IGameRepository;
 import com.example.gamesApi.validates.ValidateGenres;
@@ -29,7 +29,7 @@ public class GameService {
         Optional<GameModel> game = IGameRepository.findById(id);
 
         if(game.isEmpty()){
-            throw new ResourceNotFoundException("Game not found.");
+            throw new GameNotFoundException("Game not found.");
         }
 
         return game.get();
@@ -41,7 +41,7 @@ public class GameService {
     }
 
     public List<GameModel> searchGames(String title){
-        return IGameRepository.findByTitleIgnoreCaseContaining(title, Sort.by(Sort.Direction.DESC, "title"));
+        return IGameRepository.findByTitleIgnoreCaseContaining(title, Sort.by(Sort.Direction.ASC, "title"));
     }
 
     public GameModel createGame(GameDTO gameDto) {
@@ -72,7 +72,7 @@ public class GameService {
         Optional<GameModel> game = IGameRepository.findById(id);
 
         if(game.isEmpty()){
-            throw new ResourceNotFoundException("Game not found.");
+            throw new GameNotFoundException("Game not found.");
         }
 
         String[] genres = gameDto.getGenres();
@@ -96,7 +96,7 @@ public class GameService {
         Optional<GameModel> game = IGameRepository.findById(id);
 
         if(game.isEmpty()){
-            throw new ResourceNotFoundException("Game not found.");
+            throw new GameNotFoundException("Game not found.");
         }
 
         IGameRepository.delete(game.get());

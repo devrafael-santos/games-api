@@ -15,7 +15,7 @@ public class ValidateGenres {
 
     public static void validateGenre(String genre){
         if (!GENRES.contains(genre.toUpperCase())) {
-            throw new IllegalArgumentException("Invalid genre: " + genre);
+            throw new IllegalArgumentException("Invalid Genre: " + genre);
         }
     }
 
