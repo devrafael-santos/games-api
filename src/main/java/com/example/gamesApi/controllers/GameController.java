@@ -35,6 +35,17 @@ public class GameController implements Serializable {
         return ResponseEntity.status(HttpStatus.OK).body(games);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<GameModel>> searchGames(@RequestParam("title") String title) {
+        List<GameModel> games = gameService.searchGames(title);
+
+        for(GameModel game : games){
+            game.add(linkTo(methodOn(GameController.class).getOne(game.getId())).withSelfRel());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(games);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable(value = "id") UUID id){

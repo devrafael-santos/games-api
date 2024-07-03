@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Data
-public class GameDTO implements Serializable {
+public class GameDTO {
     private UUID id;
 
     @NotBlank
@@ -37,9 +37,6 @@ public class GameDTO implements Serializable {
 
     @NotBlank
     private String buyGame;
-
-    public GameDTO() {
-    }
 
     public GameDTO(GameModel game) {
         BeanUtils.copyProperties(game, this);
