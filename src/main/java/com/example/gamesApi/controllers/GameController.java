@@ -48,7 +48,7 @@ public class GameController implements Serializable {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOne(@PathVariable(value = "id") UUID id){
+    public ResponseEntity<GameDTO> getOne(@PathVariable(value = "id") UUID id){
 
         GameModel game = gameService.getGame(id);
         GameDTO gameDto = new GameDTO(game);
@@ -60,7 +60,7 @@ public class GameController implements Serializable {
     }
 
     @PostMapping()
-    public ResponseEntity<?> saveOne(@RequestBody @Valid GameDTO gameDto){
+    public ResponseEntity<GameDTO> saveOne(@RequestBody @Valid GameDTO gameDto){
 
         GameDTO game = new GameDTO(gameService.createGame(gameDto));
 
@@ -70,31 +70,16 @@ public class GameController implements Serializable {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOne(@PathVariable(value = "id") UUID id){
-
-        try {
         gameService.deleteGame(id);
-
-        } catch (RuntimeException e) {
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
 
         return ResponseEntity.status(HttpStatus.OK).body("Game deleted");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOne(@PathVariable(value = "id") UUID id,
+    public ResponseEntity<GameDTO> updateOne(@PathVariable(value = "id") UUID id,
                                          @RequestBody @Valid GameDTO gameDto){
-        GameDTO game;
 
-        try {
-
-        game = new GameDTO(gameService.updateGame(id, gameDto));
-        } catch (RuntimeException e){
-
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        GameDTO game = new GameDTO(gameService.updateGame(id, gameDto));
 
         return ResponseEntity.status(HttpStatus.OK).body(game);
     }
