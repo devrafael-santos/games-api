@@ -14,23 +14,27 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(GameNotFoundException.class)
-    private ResponseEntity<String> gameNotFoundHandler(GameNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    private ResponseEntity<RestErrorMessage> gameNotFoundHandler(GameNotFoundException exception) {
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
     }
 
     @ExceptionHandler(GameAlreadyExistsException.class)
-    private ResponseEntity<String> gameAlreadyExistsHandler(GameAlreadyExistsException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    private ResponseEntity<RestErrorMessage> gameAlreadyExistsHandler(GameAlreadyExistsException exception) {
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
 
     @ExceptionHandler(InvalidGenreException.class)
-    private ResponseEntity<String> InvalidGenreHandler(InvalidGenreException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    private ResponseEntity<RestErrorMessage> InvalidGenreHandler(InvalidGenreException exception) {
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
 
     @ExceptionHandler(InvalidPlatformException.class)
-    private ResponseEntity<String> InvalidPlatformException(InvalidPlatformException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    private ResponseEntity<RestErrorMessage> InvalidPlatformException(InvalidPlatformException exception) {
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
 
 }
