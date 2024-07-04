@@ -1,5 +1,7 @@
 package com.example.gamesApi.validates;
 
+import com.example.gamesApi.exceptions.InvalidGenreException;
+
 import java.util.Set;
 
 public class ValidateGenres {
@@ -15,7 +17,7 @@ public class ValidateGenres {
 
     public static void validateGenre(String genre){
         if (!GENRES.contains(genre.toUpperCase())) {
-            throw new IllegalArgumentException("Invalid Genre: " + genre);
+            throw new InvalidGenreException(genre);
         }
     }
 

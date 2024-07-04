@@ -1,5 +1,7 @@
 package com.example.gamesApi.validates;
 
+import com.example.gamesApi.exceptions.InvalidPlatformException;
+
 import java.util.Set;
 
 public class ValidatePlatforms {
@@ -10,7 +12,7 @@ public class ValidatePlatforms {
 
         public static void validatePlatform(String platform){
             if (!PLATFORMS.contains(platform.toUpperCase())) {
-                throw new IllegalArgumentException("Invalid Platform: " + platform);
+                throw new InvalidPlatformException(platform);
             }
         }
 

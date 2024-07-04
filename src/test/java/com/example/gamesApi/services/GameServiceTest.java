@@ -3,6 +3,8 @@ package com.example.gamesApi.services;
 import com.example.gamesApi.dto.GameDTO;
 import com.example.gamesApi.exceptions.GameAlreadyExistsException;
 import com.example.gamesApi.exceptions.GameNotFoundException;
+import com.example.gamesApi.exceptions.InvalidGenreException;
+import com.example.gamesApi.exceptions.InvalidPlatformException;
 import com.example.gamesApi.models.GameModel;
 import com.example.gamesApi.repositories.IGameRepository;
 import org.junit.jupiter.api.*;
@@ -105,7 +107,7 @@ class GameServiceTest {
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
+        Assertions.assertThrows(InvalidGenreException.class, () -> gameService.createGame(gameDto));
 
     }
 
@@ -117,7 +119,7 @@ class GameServiceTest {
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.createGame(gameDto));
+        Assertions.assertThrows(InvalidPlatformException.class, () -> gameService.createGame(gameDto));
     }
 
     @Test
@@ -180,7 +182,7 @@ class GameServiceTest {
 
         when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
+        Assertions.assertThrows(InvalidGenreException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test
@@ -197,7 +199,7 @@ class GameServiceTest {
 
         when(IGameRepository.findById(gameModel.getId())).thenReturn(Optional.of(gameModel));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
+        Assertions.assertThrows(InvalidPlatformException.class, () -> gameService.updateGame(gameModel.getId(), invalidGameDTO));
     }
 
     @Test

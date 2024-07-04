@@ -29,7 +29,7 @@ public class GameService {
         Optional<GameModel> game = IGameRepository.findById(id);
 
         if(game.isEmpty()){
-            throw new GameNotFoundException("Game not found.");
+            throw new GameNotFoundException();
         }
 
         return game.get();
@@ -72,7 +72,7 @@ public class GameService {
         Optional<GameModel> game = IGameRepository.findById(id);
 
         if(game.isEmpty()){
-            throw new GameNotFoundException("Game not found.");
+            throw new GameNotFoundException();
         }
 
         String[] genres = gameDto.getGenres();
@@ -96,7 +96,7 @@ public class GameService {
         Optional<GameModel> game = IGameRepository.findById(id);
 
         if(game.isEmpty()){
-            throw new GameNotFoundException("Game not found.");
+            throw new GameNotFoundException();
         }
 
         IGameRepository.delete(game.get());
