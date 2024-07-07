@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.Link;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -17,9 +18,9 @@ public class GameDTO {
     @NotBlank
     private String title;
 
-    private String[] genres;
+    private List<String> genres;
 
-    private String[] platforms;
+    private List<String> platforms;
 
     @NotNull
     private int ageGroup;
@@ -44,8 +45,8 @@ public class GameDTO {
 
     public GameDTO(String title, String[] genres, String[] platforms, int ageGroup, String urlImage, String releaseDate, String synopsis, String buyGame) {
         this.title = title;
-        this.genres = genres;
-        this.platforms = platforms;
+        this.genres = List.of(genres);
+        this.platforms = List.of(platforms);
         this.ageGroup = ageGroup;
         this.urlImage = urlImage;
         this.releaseDate = releaseDate;

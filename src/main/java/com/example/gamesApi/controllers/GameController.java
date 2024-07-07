@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -46,6 +48,17 @@ public class GameController implements Serializable {
         return ResponseEntity.status(HttpStatus.OK).body(games);
     }
 
+    @GetMapping("/genres")
+    public ResponseEntity<List<GameModel>> searchByGenres(@RequestParam("genre") String genre){
+
+        List<GameModel> games = gameService.searchByGenre(genre);
+
+        for(GameModel game : games){
+            game.add(linkTo(methodOn(GameController.class).getOne(game.getId())).withSelfRel());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(games);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<GameDTO> getOne(@PathVariable(value = "id") UUID id){
