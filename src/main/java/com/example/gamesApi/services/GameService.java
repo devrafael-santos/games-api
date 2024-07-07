@@ -13,20 +13,17 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class GameService {
 
     @Autowired
-    IGameRepository IGameRepository;
+    IGameRepository iGameRepository;
 
     public GameModel getGame(UUID id){
 
-        Optional<GameModel> game = IGameRepository.findById(id);
+        Optional<GameModel> game = iGameRepository.findById(id);
 
         if(game.isEmpty()){
             throw new GameNotFoundException();
@@ -37,11 +34,16 @@ public class GameService {
 
 
     public List<GameModel> getAllGames(){
-        return IGameRepository.findAll();
+        return iGameRepository.findAll();
     }
 
     public List<GameModel> searchGames(String title){
-        return IGameRepository.findByTitleIgnoreCaseContaining(title, Sort.by(Sort.Direction.ASC, "title"));
+        return iGameRepository.findByTitleIgnoreCaseContaining(title, Sort.by(Sort.Direction.ASC, "title"));
+    }
+
+    public List<GameModel> searchByGenre(String genre){
+
+        return iGameRepository.findByGenresIn(genre.toUpperCase());
     }
 
     public GameModel createGame(GameDTO gameDto) {
@@ -49,10 +51,10 @@ public class GameService {
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         final Calendar calendar = Calendar.getInstance();
 
-        String[] genres = gameDto.getGenres();
-        String[] platforms = gameDto.getPlatforms();
+        List<String> genres = gameDto.getGenres();
+        List<String> platforms = gameDto.getPlatforms();
 
-        if(IGameRepository.existsByTitle(gameDto.getTitle())){
+        if(iGameRepository.existsByTitle(gameDto.getTitle())){
             throw new GameAlreadyExistsException(gameDto.getTitle());
         }
 
@@ -63,20 +65,20 @@ public class GameService {
 
         gameModel.setAddedTime(dateFormat.format(calendar.getTime()));
 
-        return IGameRepository.save(gameModel);
+        return iGameRepository.save(gameModel);
     }
 
 
     public GameModel updateGame(UUID id, GameDTO gameDto){
 
-        Optional<GameModel> game = IGameRepository.findById(id);
+        Optional<GameModel> game = iGameRepository.findById(id);
 
         if(game.isEmpty()){
             throw new GameNotFoundException();
         }
 
-        String[] genres = gameDto.getGenres();
-        String[] platforms = gameDto.getPlatforms();
+        List<String> genres = gameDto.getGenres();
+        List<String> platforms = gameDto.getPlatforms();
         String addedTime = game.get().getAddedTime();
 
 
@@ -87,19 +89,19 @@ public class GameService {
         GameModel gameModel = new GameModel(gameDto);
         gameModel.setAddedTime(addedTime);
 
-        IGameRepository.delete(game.get());
+        iGameRepository.delete(game.get());
 
-        return IGameRepository.save(gameModel);
+        return iGameRepository.save(gameModel);
     }
 
     public void deleteGame(UUID id){
-        Optional<GameModel> game = IGameRepository.findById(id);
+        Optional<GameModel> game = iGameRepository.findById(id);
 
         if(game.isEmpty()){
             throw new GameNotFoundException();
         }
 
-        IGameRepository.delete(game.get());
+        iGameRepository.delete(game.get());
     }
 
 
