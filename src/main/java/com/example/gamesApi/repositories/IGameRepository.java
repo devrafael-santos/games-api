@@ -17,7 +17,10 @@ public interface IGameRepository extends JpaRepository<GameModel, UUID> {
     List<GameModel> findByTitleIgnoreCaseContaining(String title, Sort sort);
 
 
-    @Query("SELECT g FROM GameModel g WHERE LOWER(:genre) MEMBER OF g.genres")
+    @Query("SELECT g FROM GameModel g WHERE UPPER(:genre) MEMBER OF g.genres")
     List<GameModel> findByGenresIn(String genre);
+
+    @Query("SELECT g FROM GameModel g WHERE UPPER(:platform) MEMBER OF g.platforms")
+    List<GameModel> findByPlatformIn(String platform);
 
 }

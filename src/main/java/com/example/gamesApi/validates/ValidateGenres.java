@@ -17,14 +17,14 @@ public class ValidateGenres {
     );
 
     public static void validateGenre(String genre){
-        if (!GENRES.contains(genre.toUpperCase())) {
+        if (!GENRES.contains(genre)) {
             throw new InvalidGenreException(genre);
         }
     }
 
-    public ValidateGenres(List<String> genres){
+    public ValidateGenres(Set<String> genres){
         for(String genre : genres){
-            validateGenre(genre);
+            validateGenre(genre.toUpperCase());
         }
     }
 
