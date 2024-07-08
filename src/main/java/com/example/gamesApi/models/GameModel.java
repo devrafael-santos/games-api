@@ -8,6 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -22,10 +23,10 @@ public class GameModel extends RepresentationModel<GameModel> {
     private String title;
 
     @ElementCollection
-    private List<String> genres;
+    private Set<String> genres;
 
     @ElementCollection
-    private List<String> platforms;
+    private Set<String> platforms;
 
     private int ageGroup;
 

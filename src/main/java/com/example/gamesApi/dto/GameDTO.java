@@ -9,6 +9,7 @@ import org.springframework.hateoas.Link;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -18,9 +19,9 @@ public class GameDTO {
     @NotBlank
     private String title;
 
-    private List<String> genres;
+    private Set<String> genres;
 
-    private List<String> platforms;
+    private Set<String> platforms;
 
     @NotNull
     private int ageGroup;
@@ -39,14 +40,12 @@ public class GameDTO {
     @NotBlank
     private String buyGame;
 
-    public GameDTO(GameModel game) {
-        BeanUtils.copyProperties(game, this);
-    }
+    public GameDTO(GameModel game) {BeanUtils.copyProperties(game, this);}
 
-    public GameDTO(String title, String[] genres, String[] platforms, int ageGroup, String urlImage, String releaseDate, String synopsis, String buyGame) {
+    public GameDTO(String title, Set<String> genres, Set<String> platforms, int ageGroup, String urlImage, String releaseDate, String synopsis, String buyGame) {
         this.title = title;
-        this.genres = List.of(genres);
-        this.platforms = List.of(platforms);
+        this.genres = genres;
+        this.platforms = platforms;
         this.ageGroup = ageGroup;
         this.urlImage = urlImage;
         this.releaseDate = releaseDate;

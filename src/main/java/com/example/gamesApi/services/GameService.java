@@ -46,13 +46,18 @@ public class GameService {
         return iGameRepository.findByGenresIn(genre.toUpperCase());
     }
 
+    public List<GameModel> searchByPlatforms(String platform){
+
+        return iGameRepository.findByPlatformIn(platform);
+    }
+
     public GameModel createGame(GameDTO gameDto) {
 
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         final Calendar calendar = Calendar.getInstance();
 
-        List<String> genres = gameDto.getGenres();
-        List<String> platforms = gameDto.getPlatforms();
+        Set<String> genres = gameDto.getGenres();
+        Set<String> platforms = gameDto.getPlatforms();
 
         if(iGameRepository.existsByTitle(gameDto.getTitle())){
             throw new GameAlreadyExistsException(gameDto.getTitle());
@@ -62,6 +67,7 @@ public class GameService {
         new ValidatePlatforms(platforms);
 
         GameModel gameModel = new GameModel(gameDto);
+
 
         gameModel.setAddedTime(dateFormat.format(calendar.getTime()));
 
@@ -77,8 +83,8 @@ public class GameService {
             throw new GameNotFoundException();
         }
 
-        List<String> genres = gameDto.getGenres();
-        List<String> platforms = gameDto.getPlatforms();
+        Set<String> genres = gameDto.getGenres();
+        Set<String> platforms = gameDto.getPlatforms();
         String addedTime = game.get().getAddedTime();
 
 
