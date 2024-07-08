@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -27,8 +28,8 @@ class IGameRepositoryTest {
     @DisplayName("Should get Game successfully from database")
     void existsByTitleCase1() {
         UUID id = UUID.randomUUID();
-        String[] genres = {"Adventure"};
-        String[] platforms = {"PC"};
+        Set<String> genres = Set.of("Adventure");
+        Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         this.createOneGame(gameDto);
