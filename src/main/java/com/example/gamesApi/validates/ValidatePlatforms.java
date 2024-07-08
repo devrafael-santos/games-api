@@ -2,7 +2,6 @@ package com.example.gamesApi.validates;
 
 import com.example.gamesApi.exceptions.InvalidPlatformException;
 
-import java.util.List;
 import java.util.Set;
 
 public class ValidatePlatforms {
@@ -12,14 +11,14 @@ public class ValidatePlatforms {
         );
 
         public static void validatePlatform(String platform){
-            if (!PLATFORMS.contains(platform.toUpperCase())) {
+            if (!PLATFORMS.contains(platform)) {
                 throw new InvalidPlatformException(platform);
             }
         }
 
-        public ValidatePlatforms(List<String> genres){
-            for(String genre : genres){
-                validatePlatform(genre);
+        public ValidatePlatforms(Set<String> platforms){
+            for(String platform : platforms){
+                validatePlatform(platform.toUpperCase());
             }
         }
 
