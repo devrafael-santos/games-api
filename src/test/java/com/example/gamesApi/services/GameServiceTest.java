@@ -44,7 +44,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should get a game successfully when the ID is valid")
     void getGameCase2() {
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -60,7 +60,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should get a list of Games ordered by title")
     void searchGame() {
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto1 = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -83,7 +83,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should return all games saved")
     void getAllGames() {
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -102,7 +102,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw and Exception and not create a Game when some Genres is invalid")
     void createGameCase1() {
-        Set<String> genres = Set.of("Advent");
+        Set<String> genres = Set.of("ADVENT");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -114,7 +114,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw and Exception and not create a Game when some Platforms is invalid")
     void createGameCase2() {
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("P");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -125,7 +125,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw and Exception and not create a game when game name already exists")
     void createGameCase3() {
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -141,7 +141,7 @@ class GameServiceTest {
         final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         final Calendar calendar = Calendar.getInstance();
 
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Roblox", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -158,7 +158,7 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw an Exception and not update a game when the game is not found")
     void updateGameCase1() {
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
 
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -171,8 +171,8 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw an Exception and not create a game when the game Genres are invalid")
     void updateGameCase2() {
-        Set<String> validGenres = Set.of("Adventure");
-        Set<String> invalidGenres = Set.of("Advent");
+        Set<String> validGenres = Set.of("ADVENTURE");
+        Set<String> invalidGenres = Set.of("ADVENT");
         Set<String> platforms = Set.of("PC");
 
         GameDTO validGameDto = new GameDTO("Minecraft", validGenres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
@@ -189,7 +189,7 @@ class GameServiceTest {
     @DisplayName("Should throw an Exception and not create a game when the game Platforms are invalid")
     void updateGameCase3() {
 
-        Set<String>  genres = Set.of("Adventure");
+        Set<String>  genres = Set.of("ADVENTURE");
         Set<String> validPlatforms = Set.of("PC");
         Set<String> invalidPlatforms = Set.of("P");
 
@@ -206,8 +206,8 @@ class GameServiceTest {
     @Test
     @DisplayName("Should update a new game successfully")
     void updateGameCase4() {
-        Set<String> oldGenres = Set.of("Adventure");
-        Set<String> newGenres = Set.of("Action");
+        Set<String> oldGenres = Set.of("ADVENTURE");
+        Set<String> newGenres = Set.of("ACTION");
 
         Set<String> oldPlatforms = Set.of("PC");
         Set<String> newPlatforms = Set.of("PC", "PS5");
@@ -232,8 +232,9 @@ class GameServiceTest {
     @Test
     @DisplayName("Should throw and Exception when game not exists")
     void deleteGameCase1() {
-        Set<String>  genres = Set.of("Adventure");
+        Set<String>  genres = Set.of("ADVENTURE");
         Set<String>  platforms = Set.of("PC");
+
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
 
@@ -247,7 +248,7 @@ class GameServiceTest {
     @DisplayName("Should delete a game successfully")
     void deleteGameCase2() {
 
-        Set<String> genres = Set.of("Adventure");
+        Set<String> genres = Set.of("ADVENTURE");
         Set<String> platforms = Set.of("PC");
         GameDTO gameDto = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
         GameModel gameModel = new GameModel(gameDto);
