@@ -81,6 +81,52 @@ class GameServiceTest {
     }
 
     @Test
+    @DisplayName("Should get a list of Games by genre")
+    void searchGameByGenre() {
+        Set<String> genres = Set.of("ADVENTURE");
+        Set<String> platforms = Set.of("PC");
+
+        GameDTO gameDto1 = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel1 = new GameModel(gameDto1);
+
+        GameDTO gameDto2 = new GameDTO("Motor Sport", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel2 = new GameModel(gameDto2);
+
+        List<GameModel> listOfGames = new ArrayList<>();
+        listOfGames.add(gameModel1);
+        listOfGames.add(gameModel2);
+
+        when(IGameRepository.findByGenresIn("ADVENTURE")).thenReturn(listOfGames);
+
+        List<GameModel> result = gameService.searchByGenre("Adventure");
+
+        assertThat(listOfGames.equals(result)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should get a list of Games by platform")
+    void searchGameByPlatform() {
+        Set<String> genres = Set.of("ADVENTURE");
+        Set<String> platforms = Set.of("PC");
+
+        GameDTO gameDto1 = new GameDTO("Minecraft", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel1 = new GameModel(gameDto1);
+
+        GameDTO gameDto2 = new GameDTO("Motor Sport", genres, platforms, 12, "url", "2010", "Synopsis", "link for buy");
+        GameModel gameModel2 = new GameModel(gameDto2);
+
+        List<GameModel> listOfGames = new ArrayList<>();
+        listOfGames.add(gameModel1);
+        listOfGames.add(gameModel2);
+
+        when(IGameRepository.findByPlatformIn("PC")).thenReturn(listOfGames);
+
+        List<GameModel> result = gameService.searchByPlatforms("PC");
+
+        assertThat(listOfGames.equals(result)).isTrue();
+    }
+
+    @Test
     @DisplayName("Should return all games saved")
     void getAllGames() {
         Set<String> genres = Set.of("ADVENTURE");
