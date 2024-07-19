@@ -16,10 +16,8 @@ public class ValidatePlatforms {
             }
         }
 
-        public ValidatePlatforms(Set<String> platforms){
-            for(String platform : platforms){
-                validatePlatform(platform.toUpperCase());
-            }
+        public static void validate(Set<String> platforms){
+            platforms.forEach(platform -> validatePlatform(platform.toUpperCase()));
         }
 
     }

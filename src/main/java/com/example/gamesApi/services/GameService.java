@@ -63,8 +63,8 @@ public class GameService {
             throw new GameAlreadyExistsException(gameDto.getTitle());
         }
 
-        new ValidateGenres(genres);
-        new ValidatePlatforms(platforms);
+        ValidateGenres.validate(genres);
+        ValidatePlatforms.validate(platforms);
 
         GameModel gameModel = new GameModel(gameDto);
 
@@ -88,8 +88,8 @@ public class GameService {
         String addedTime = game.get().getAddedTime();
 
 
-        new ValidateGenres(genres);
-        new ValidatePlatforms(platforms);
+        ValidateGenres.validate(genres);
+        ValidatePlatforms.validate(platforms);
 
 
         GameModel gameModel = new GameModel(gameDto);
