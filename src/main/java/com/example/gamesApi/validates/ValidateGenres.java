@@ -2,6 +2,7 @@ package com.example.gamesApi.validates;
 
 import com.example.gamesApi.exceptions.InvalidGenreException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,14 +17,20 @@ public class ValidateGenres {
             "SIMULATION", "STRATEGY", "SPORTS", "BATTLE-ROYALE"
     );
 
-    public static void validateGenre(String genre){
+    public static String validateGenre(String genre){
         if (!GENRES.contains(genre)) {
             throw new InvalidGenreException(genre);
+        } else {
+        return genre.toUpperCase();
         }
     }
 
-    public static void validate(Set<String> genres){
-        genres.forEach(genre -> validateGenre(genre.toUpperCase()));
+    public static Set<String> validate(Set<String> genres){
+        Set<String> validatedGenres = new HashSet<>();
+        for(String genre : genres){
+            validatedGenres.add(validateGenre(genre.toUpperCase()));
+        }
+        return validatedGenres;
     }
 
 }
