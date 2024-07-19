@@ -22,10 +22,8 @@ public class ValidateGenres {
         }
     }
 
-    public ValidateGenres(Set<String> genres){
-        for(String genre : genres){
-            validateGenre(genre.toUpperCase());
-        }
+    public static void validate(Set<String> genres){
+        genres.forEach(genre -> validateGenre(genre.toUpperCase()));
     }
 
 }
